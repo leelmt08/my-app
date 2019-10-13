@@ -1,0 +1,35 @@
+node {
+   stage('SCM Checkout'){
+	git  'https://github.com/leelmt08/my-app/'
+   }
+
+	stage ('Compile package'){
+	//Get mvn home path
+	def mvnHome = tool name: 'maven_3_6_2', type: 'maven'
+		bat "${mvnHome}/bin/mvn package"
+	}
+	
+     stage('SonarQube Analysis') {
+        def mvnHome =  tool name: 'maven_3_6_2', type: 'maven'
+        withSonarQubeEnv('sonar7.5') { 
+          bat "${mvnHome}/bin/mvn sonar:sonar"
+        }
+    }
+    
+     stage("Quality Gate Statuc Check"){
+          timeout(time: 1, unit: 'HOURS') {
+              def qg = waitForQualityGate()
+              if (qg.status != 'OK') {
+                                     error "Pipeline aborted due to quality gate failure: ${qg.status}"
+              }
+          }
+      }    
+	         stage('testing stage') {
+		def mvnHome = tool name: 'maven_3_6_2', type: 'maven'
+                bat "${mvnHome}/bin/mvn test"
+        }
+		 stage('Email Notification') {
+		mail bcc: '', body: 'test success', cc: '', from: '', replyTo: '', subject: 'jenkins-test', to: 'leebhovi@gmail.com'
+		 }
+}
+	
