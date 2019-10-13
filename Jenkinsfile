@@ -6,6 +6,6 @@ node {
 	stage ('Compile package'){
 	//Get mvn home path
 	def mvnHome = tool name: 'maven_3_6_2', type: 'maven'
-		sh "${mvnHome}/bin/mvn package"
+		bat "${mvnHome}/bin/mvn package"
 	}
 }
