@@ -14,6 +14,8 @@ node {
 		def mvnHome = tool name: 'maven_3_6_2', type: 'maven'
                 bat "${mvnHome}/bin/mvn test"
         }
-		 
+		 stage('Email Notification') {
+		mail bcc: '', body: 'test success', cc: '', from: '', replyTo: '', subject: 'jenkins-test', to: 'leebhovi@gmail.com'
+		 }
 }
 	
