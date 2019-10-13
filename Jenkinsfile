@@ -16,4 +16,6 @@ node {
              steps {
                 bat "mvn test"
         }
+		 }
 }
+	
